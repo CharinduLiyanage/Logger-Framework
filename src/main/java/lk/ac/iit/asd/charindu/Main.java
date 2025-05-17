@@ -4,23 +4,28 @@ import java.sql.*;
 
 
 /**
- * Demonstrates usage of various LogRepository implementations with BankAccount operations.
+ * Demonstrates the Logger framework across all available backends.
+ * <p>
+ * For each repository type, we configure the singleton Logger
+ * and perform a small sequence of BankAccount operations
+ * to show log output in that backend.
+ * </p>
  */
 public class Main {
     /**
-     * Entry point: configures and runs demo scenarios for each logging backend.
+     * Application entry point.
      *
      * @param args Command-line arguments (unused).
-     * @throws SQLException If database setup fails.
+     * @throws SQLException if any database repository initialization fails.
      */
     public static void main(String[] args) throws SQLException {
-        // Initialize different repositories
+        // Instantiate each repository directly (could also use LogRepositoryFactory)
         LogRepository consoleRepo = new ConsoleLogRepository();
         LogRepository fileRepo = new FileLogRepository("app.log");
         LogRepository xmlRepo = new XMLFileLogRepository("app.xml");
         LogRepository dbRepo = new DatabaseLogRepository("jdbc:h2:~/logs");
 
-        // Run demo for each repository
+        // Execute the same demo on each backend
         runDemo("Console Logging", consoleRepo);
         runDemo("File Logging", fileRepo);
         runDemo("XML Logging", xmlRepo);
@@ -43,14 +48,17 @@ public class Main {
     }
 
     /**
-     * Executes a series of bank operations with the given repository and logs output.
+     * Runs a mini‐demo of BankAccount operations, logging each action.
      *
-     * @param title Demo title printed to console.
-     * @param repo  LogRepository backend for this demo.
-     * @throws SQLException If database logging setup fails.
+     * @param title A human-readable title printed before the demo.
+     * @param repo  The backend to which log messages will be routed.
+     * @throws SQLException if the repo is a {@link DatabaseLogRepository}
+     *                      and its underlying connection/setup fails.
      */
-    private static void runDemo(String title, LogRepository repo) throws SQLException {
+    private static void runDemo(String title, LogRepository repo)
+            throws SQLException {
         System.out.println("=== " + title + " ===");
+        // Configure logger: only INFORM and above, enabled, using this repo
         Logger.getInstance().configure(LogLevel.INFORM, true, repo);
 
         // Create a new bank account for Alice with an initial balance
