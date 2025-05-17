@@ -2,31 +2,35 @@ package lk.ac.iit.asd.charindu;
 
 /**
  * Defines log levels with associated priority for filtering.
- * Higher priority values indicate lower severity.
+ * Lower priority values indicate higher severity.
  */
 public enum LogLevel {
+    /**
+     * Critical errors requiring immediate attention.
+     */
     CRITICAL(5),
     /**
-     * Error level, the highest severity.
+     * Error level, high severity.
      */
     ERROR(10),
+    /**
+     * Alarm level for potential issues.
+     */
     ALARM(15),
     /**
-     * Debug level for detailed messages.
+     * Debug level for detailed diagnostic messages.
      */
     DEBUG(20),
     /**
-     * Informational level for general messages.
+     * Informational messages about normal operations.
      */
     INFORM(30);
 
-    /**
-     * Numeric priority for comparison.
-     */
+
     private final int priority;
 
     /**
-     * Constructor to assign priority.
+     * Constructs a LogLevel with the given numeric priority.
      *
      * @param p Numeric priority.
      */

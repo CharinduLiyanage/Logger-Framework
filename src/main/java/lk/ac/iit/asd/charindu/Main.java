@@ -3,15 +3,24 @@ package lk.ac.iit.asd.charindu;
 import java.sql.*;
 
 
+/**
+ * Demonstrates usage of various LogRepository implementations with BankAccount operations.
+ */
 public class Main {
+    /**
+     * Entry point: configures and runs demo scenarios for each logging backend.
+     *
+     * @param args Command-line arguments (unused).
+     * @throws SQLException If database setup fails.
+     */
     public static void main(String[] args) throws SQLException {
-        // Create repositories
+        // Initialize different repositories
         LogRepository consoleRepo = new ConsoleLogRepository();
         LogRepository fileRepo = new FileLogRepository("app.log");
         LogRepository xmlRepo = new XMLFileLogRepository("app.xml");
         LogRepository dbRepo = new DatabaseLogRepository("jdbc:h2:~/logs");
 
-        // Run demo for each type
+        // Run demo for each repository
         runDemo("Console Logging", consoleRepo);
         runDemo("File Logging", fileRepo);
         runDemo("XML Logging", xmlRepo);
@@ -33,18 +42,24 @@ public class Main {
         }
     }
 
-
+    /**
+     * Executes a series of bank operations with the given repository and logs output.
+     *
+     * @param title Demo title printed to console.
+     * @param repo  LogRepository backend for this demo.
+     * @throws SQLException If database logging setup fails.
+     */
     private static void runDemo(String title, LogRepository repo) throws SQLException {
         System.out.println("=== " + title + " ===");
         Logger.getInstance().configure(LogLevel.INFORM, true, repo);
 
-        // Create a new bank account for Alice with initial balance.
+        // Create a new bank account for Alice with an initial balance
         BankAccount acct = new BankAccount("Alice", "12345", 1000);
 
-        // Perform deposit and withdrawal operations.
+        // Perform deposit and withdrawal operations
         acct.deposit(500);
         acct.withdraw(200);
-        // Attempt invalid withdrawal to demonstrate error logging.
+        // Attempt invalid withdrawal to demonstrate error logging
         acct.withdraw(-50);
     }
 }
