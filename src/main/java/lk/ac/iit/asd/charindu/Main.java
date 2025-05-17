@@ -1,17 +1,42 @@
 package lk.ac.iit.asd.charindu;
 
-/**
- * Example Main class demonstrating Logger and BankAccount usage.
- */
+import java.sql.*;
+
+
 public class Main {
-    /**
-     * Entry point: configures the logger, creates an account, and performs transactions.
-     *
-     * @param args Command-line arguments (unused).
-     */
-    public static void main(String[] args) {
-        // Configure logger to show messages of INFORM level and above.
-        Logger.getInstance().configure(LogLevel.INFORM);
+    public static void main(String[] args) throws SQLException {
+        // Create repositories
+        LogRepository consoleRepo = new ConsoleLogRepository();
+        LogRepository fileRepo = new FileLogRepository("app.log");
+        LogRepository xmlRepo = new XMLFileLogRepository("app.xml");
+        LogRepository dbRepo = new DatabaseLogRepository("jdbc:h2:~/logs");
+
+        // Run demo for each type
+        runDemo("Console Logging", consoleRepo);
+        runDemo("File Logging", fileRepo);
+        runDemo("XML Logging", xmlRepo);
+        runDemo("Database Logging", dbRepo);
+
+        // Read back DB logs
+        System.out.println("=== Database Log Entries ===");
+        try {
+            Class.forName("org.h2.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        try (Connection conn = DriverManager.getConnection("jdbc:h2:~/logs");
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery("SELECT id, message FROM logs ORDER BY id")) {
+            while (rs.next()) {
+                System.out.println(rs.getInt("id") + ": " + rs.getString("message"));
+            }
+        }
+    }
+
+
+    private static void runDemo(String title, LogRepository repo) throws SQLException {
+        System.out.println("=== " + title + " ===");
+        Logger.getInstance().configure(LogLevel.INFORM, true, repo);
 
         // Create a new bank account for Alice with initial balance.
         BankAccount acct = new BankAccount("Alice", "12345", 1000);

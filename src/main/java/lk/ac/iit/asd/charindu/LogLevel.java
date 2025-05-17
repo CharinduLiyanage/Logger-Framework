@@ -5,10 +5,12 @@ package lk.ac.iit.asd.charindu;
  * Higher priority values indicate lower severity.
  */
 public enum LogLevel {
+    CRITICAL(5),
     /**
      * Error level, the highest severity.
      */
     ERROR(10),
+    ALARM(15),
     /**
      * Debug level for detailed messages.
      */

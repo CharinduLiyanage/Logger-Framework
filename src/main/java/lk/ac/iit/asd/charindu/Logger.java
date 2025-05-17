@@ -20,6 +20,8 @@ public class Logger {
      * Current threshold for which log levels to display.
      */
     private LogLevel threshold = LogLevel.INFORM;
+    private boolean enabled = true;
+    private LogRepository repo;
 
     /**
      * Private constructor to prevent external instantiation.
@@ -45,8 +47,10 @@ public class Logger {
      *
      * @param level LogLevel threshold to set.
      */
-    public void configure(LogLevel level) {
+    public void configure(LogLevel level, boolean enabled, LogRepository repo) {
         this.threshold = level;
+        this.enabled = enabled;
+        this.repo = repo;
     }
 
     /**
@@ -56,7 +60,7 @@ public class Logger {
      * @return True if level priority <= threshold; false otherwise.
      */
     public boolean isLevelEnabled(LogLevel level) {
-        return level.getPriority() <= threshold.getPriority();
+        return enabled && level.getPriority() <= threshold.getPriority();
     }
 
     /**
@@ -67,12 +71,12 @@ public class Logger {
      * @param msg   Message content.
      */
     public void log(LogLevel level, String msg) {
-        if (!isLevelEnabled(level)) {
-            return; // Skip if not enabled.
+        if (!isLevelEnabled(level) || repo == null) {
+            return;
         }
         String time = fmt.format(new Date());
         String formatted = String.format("[%s] [%s] %s", level, time, msg);
-        System.out.println(formatted);
+        repo.write(formatted);
     }
 
     /**
@@ -94,5 +98,13 @@ public class Logger {
      */
     public void inform(String msg) {
         log(LogLevel.INFORM, msg);
+    }
+
+    public void alarm(String msg) {
+        log(LogLevel.ALARM, msg);
+    }
+
+    public void critical(String msg) {
+        log(LogLevel.CRITICAL, msg);
     }
 }

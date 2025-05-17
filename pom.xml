@@ -6,13 +6,21 @@
 
     <groupId>lk.ac.iit.asd.charindu</groupId>
     <artifactId>w2107144_7SENG004C_cw2</artifactId>
-    <version>Q1</version>
+    <version>Q2</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>2.3.232</version>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
