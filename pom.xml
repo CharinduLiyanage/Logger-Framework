@@ -6,7 +6,7 @@
 
     <groupId>lk.ac.iit.asd.charindu</groupId>
     <artifactId>w2107144_7SENG004C_cw2</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>Q1</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
