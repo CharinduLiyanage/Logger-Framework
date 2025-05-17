@@ -1,24 +1,50 @@
 # Logger-Framework
 
-A simple Java application demonstrating a `BankAccount` class with deposit, withdrawal, and balance inquiry
-functionality, all instrumented with a configurable singleton `Logger`. Includes example usage in a `Main` class.
+A simple Java application demonstrating a `BankAccount` class with deposit, withdrawal, and balance inquiry functionality, all instrumented with a configurable singleton `Logger`. You can use the provided `Main` class for a quick demo or wire up repositories dynamically via the `LogRepositoryFactory` and `LogRepositoryType` enum.
 
 ## Features
 
 * **BankAccount**: Create accounts, deposit and withdraw funds, and check balances.
-* **Logger**: Singleton logger with timestamped and leveled output, supporting five log levels (`CRITICAL`, `ERROR`,
-  `ALARM`, `INFORM`, `DEBUG`).
+* **Logger**: Singleton logger with timestamped and leveled output, supporting five log levels (`CRITICAL`, `ERROR`, `ALARM`, `INFORM`, `DEBUG`).
 * **LogLevel**: Enumeration defining severity-based priority filtering for log messages.
 * **LogRepository**: Interface for pluggable backends (console, file, XML, database).
-* **ConsoleLogRepository**, **FileLogRepository**, **XMLFileLogRepository**, **DatabaseLogRepository**: Built-in
-  implementations.
-* **Main**: Sample entry point showing logger configuration and account operations.
+* **ConsoleLogRepository**, **FileLogRepository**, **XMLFileLogRepository**, **DatabaseLogRepository**: Built-in implementations.
+* **LogRepositoryType**: Enum listing all supported backends (`CONSOLE`, `FILE`, `XML`, `DB`).
+* **LogRepositoryFactory**: Factory for instantiating `LogRepository` implementations by type with an optional target (file path or JDBC URL).
+* **Main**: Sample entry point showing logger configuration and account operations across each backend.
+
+## Factory Usage Example
+
+Use the factory when you want to select a repository at runtime based on configuration:
+
+```java
+import lk.ac.iit.asd.charindu.*;
+
+public class App {
+    public static void main(String[] args) {
+        // Create a File repository via the factory
+        LogRepository repo = LogRepositoryFactory.create(
+            LogRepositoryType.FILE,
+            "app.log"
+        );
+
+        // Configure the singleton Logger
+        Logger.getInstance()
+              .configure(LogLevel.DEBUG, true, repo);
+
+        // Use BankAccount as usual
+        BankAccount acct = new BankAccount("Bob", "67890", 500);
+        acct.deposit(100);
+        acct.withdraw(50);
+    }
+}
+```
 
 ## Project Coordinates
 
 * **Group ID**: `lk.ac.iit.asd.charindu`
 * **Artifact ID**: `w2107144_7SENG004C_cw2`
-* **Version**: `Q2`
+* **Version**: `Q3`
 
 ## Prerequisites
 
@@ -46,7 +72,7 @@ This is a Maven-based project. Ensure you have Java (JDK 17+) and Apache Maven i
    After a successful build, the shaded JAR will be located at:
 
    ```
-   target/w2107144_7SENG004C_cw2-Q2.jar
+   target/w2107144_7SENG004C_cw2-Q3.jar
    ```
 
 ## Dependencies
@@ -60,7 +86,7 @@ Managed via Maven (see `<dependencies>` in `pom.xml`):
 Execute the packaged JAR directly:
 
 ```bash
-java -jar target/w2107144_7SENG004C_cw2-Q2.jar
+java -jar target/w2107144_7SENG004C_cw2-Q3.jar
 ```
 
 Or run via Maven:
@@ -69,7 +95,7 @@ Or run via Maven:
 mvn exec:java -Dexec.mainClass="lk.ac.iit.asd.charindu.Main"
 ```
 
-### Expected output (timestamps will vary):
+### Expected Output (timestamps will vary)
 
 ```
 [2025-05-18 14:23:45.123] [INFORM]  [12345] Account created for Alice
@@ -82,13 +108,10 @@ The timestamp format is `yyyy-MM-dd HH:mm:ss.SSS`.
 
 ## Configuration
 
-Before logging any messages, configure the `Logger`. You must supply the threshold level, whether logging is enabled,
-and the repository backend:
+Before logging any messages, configure the `Logger` singleton with:
 
 ```java
-Logger.getInstance();
-
-configure(LogLevel.DEBUG, true,new ConsoleLogRepository());
+Logger.getInstance().configure(LogLevel.INFORM, true,LogRepositoryFactory(LogRepositoryType.CONSOLE, ""));
 ```
 
 Available log levels (highest severity first):
@@ -118,9 +141,11 @@ Logger-Framework
                 ├── FileLogRepository.java
                 ├── XMLFileLogRepository.java
                 ├── DatabaseLogRepository.java
+                ├── LogRepositoryType.java
+                ├── LogRepositoryFactory.java
                 └── Main.java
 ```
 
 ## Class Diagram
 
-![Class Diagram](images/Q2.png)
+![Class Diagram](images/Q3.png)
