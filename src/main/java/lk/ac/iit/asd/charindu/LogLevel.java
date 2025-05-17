@@ -1,14 +1,42 @@
 package lk.ac.iit.asd.charindu;
 
-// Log levels with hierarchy
+/**
+ * Defines log levels with associated priority for filtering.
+ * Higher priority values indicate lower severity.
+ */
 public enum LogLevel {
-    ERROR(10), DEBUG(20), INFORM(30);
+    /**
+     * Error level, the highest severity.
+     */
+    ERROR(10),
+    /**
+     * Debug level for detailed messages.
+     */
+    DEBUG(20),
+    /**
+     * Informational level for general messages.
+     */
+    INFORM(30);
+
+    /**
+     * Numeric priority for comparison.
+     */
     private final int priority;
 
+    /**
+     * Constructor to assign priority.
+     *
+     * @param p Numeric priority.
+     */
     LogLevel(int p) {
-        priority = p;
+        this.priority = p;
     }
 
+    /**
+     * Retrieves the numeric priority of this log level.
+     *
+     * @return Priority as int.
+     */
     public int getPriority() {
         return priority;
     }
