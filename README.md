@@ -1,39 +1,34 @@
 # Logger-Framework
 
-A simple Java application demonstrating a `BankAccount` class with deposit, withdrawal, and balance inquiry functionality, all instrumented with a configurable singleton `Logger`. Includes example usage in a `Main` class.
+A simple Java application demonstrating a `BankAccount` class with deposit, withdrawal, and balance inquiry
+functionality, all instrumented with a configurable singleton `Logger`. Includes example usage in a `Main` class.
 
 ## Features
 
 * **BankAccount**: Create accounts, deposit and withdraw funds, and check balances.
-* **Logger**: Singleton logger with timestamped output, supporting three log levels (`ERROR`, `DEBUG`, `INFORM`).
+* **Logger**: Singleton logger with timestamped and leveled output, supporting five log levels (`CRITICAL`, `ERROR`,
+  `ALARM`, `INFORM`, `DEBUG`).
 * **LogLevel**: Enumeration defining severity-based priority filtering for log messages.
+* **LogRepository**: Interface for pluggable backends (console, file, XML, database).
+* **ConsoleLogRepository**, **FileLogRepository**, **XMLFileLogRepository**, **DatabaseLogRepository**: Built-in
+  implementations.
 * **Main**: Sample entry point showing logger configuration and account operations.
 
-## Package Structure
+## Project Coordinates
 
-```plaintext
-Logger-Framework
-├── pom.xml
-└── src
-    └── main
-        └── java
-            └── lk/ac/iit/asd/charindu
-                ├── BankAccount.java
-                ├── Logger.java
-                ├── LogLevel.java
-                └── Main.java
-```
+* **Group ID**: `lk.ac.iit.asd.charindu`
+* **Artifact ID**: `w2107144_7SENG004C_cw2`
+* **Version**: `Q2`
 
 ## Prerequisites
 
-* **Project Coordinates**: `lk.ac.iit.asd.charindu:w2107144_7SENG004C_cw2:Q1`
 * Java Development Kit (JDK) 17 or higher
 * Apache Maven 3.x or higher
 * Compatible IDE or command-line tools
 
 ## Installation & Compilation
 
-This is a Maven-based project. Ensure you have Java (JDK 17+) and [Apache Maven](https://maven.apache.org/) installed.
+This is a Maven-based project. Ensure you have Java (JDK 17+) and Apache Maven installed.
 
 1. Clone or download the repository:
 
@@ -50,51 +45,82 @@ This is a Maven-based project. Ensure you have Java (JDK 17+) and [Apache Maven]
 
    After a successful build, the shaded JAR will be located at:
 
-   ```plaintext
-   target/w2107144_7SENG004C_cw2-Q1.jar
    ```
+   target/w2107144_7SENG004C_cw2-Q2.jar
+   ```
+
+## Dependencies
+
+Managed via Maven (see `<dependencies>` in `pom.xml`):
+
+* **H2 Database** (`com.h2database:h2:2.3.232`)
 
 ## Running the Demo
 
 Execute the packaged JAR directly:
 
 ```bash
-java -jar target/w2107144_7SENG004C_cw2-Q1.jar
+java -jar target/w2107144_7SENG004C_cw2-Q2.jar
 ```
 
-Alternatively, run via Maven:
+Or run via Maven:
 
 ```bash
 mvn exec:java -Dexec.mainClass="lk.ac.iit.asd.charindu.Main"
 ```
 
-**Expected output:**
+### Expected output (timestamps will vary):
 
 ```
-[INFORM] [dd/MM/yyyy HH:mm:ss] [12345] Account created for Alice
-[INFORM] [dd/MM/yyyy HH:mm:ss] [12345] Deposited 500.0; new balance=1500.0
-[INFORM] [dd/MM/yyyy HH:mm:ss] [12345] Withdrew 200.0; new balance=1300.0
-[ERROR]  [dd/MM/yyyy HH:mm:ss] [12345] Withdrawal amount must be positive
+[2025-05-18 14:23:45.123] [INFORM]  [12345] Account created for Alice
+[2025-05-18 14:23:45.124] [DEBUG]   [12345] Deposited 500.0; new balance=1500.0
+[2025-05-18 14:23:45.125] [DEBUG]   [12345] Withdrew 200.0; new balance=1300.0
+[2025-05-18 14:23:45.126] [ERROR]   [12345] Invalid withdrawal amount: -50.0
 ```
 
-> *Note:* The timestamp format is `dd/MM/yyyy HH:mm:ss`.
+The timestamp format is `yyyy-MM-dd HH:mm:ss.SSS`.
 
 ## Configuration
 
-By default, the `Logger` is configured to `INFORM` level in `Main.java`. To change the verbosity:
+Before logging any messages, configure the `Logger`. You must supply the threshold level, whether logging is enabled,
+and the repository backend:
 
 ```java
-Logger.getInstance().configure(LogLevel.DEBUG);
+Logger.getInstance();
+
+configure(LogLevel.DEBUG, true,new ConsoleLogRepository());
 ```
 
-Available log levels (lowest priority to highest):
+Available log levels (highest severity first):
 
+* `CRITICAL`
 * `ERROR`
-* `DEBUG`
+* `ALARM`
 * `INFORM`
+* `DEBUG`
 
-Messages with a priority value higher than the configured threshold will be ignored.
+Messages below the configured threshold are ignored.
+
+## Package Structure
+
+```
+Logger-Framework
+├── pom.xml
+└── src
+    └── main
+        └── java
+            └── lk/ac/iit/asd/charindu
+                ├── BankAccount.java
+                ├── Logger.java
+                ├── LogLevel.java
+                ├── LogRepository.java
+                ├── ConsoleLogRepository.java
+                ├── FileLogRepository.java
+                ├── XMLFileLogRepository.java
+                ├── DatabaseLogRepository.java
+                └── Main.java
+```
 
 ## Class Diagram
 
-![Class Diagram](images/Q1.png)
+![Class Diagram](images/Q2.png)
